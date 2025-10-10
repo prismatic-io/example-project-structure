@@ -1,0 +1,13 @@
+{
+  "name": "@prismatic-io/example-project-structure",
+  "version": "1.0.0",
+  "description": "Recommended structure for a Prismatic repo. Includes custom components and code-native integrations.",
+  "repository": "git@github.com:prismatic-io/example-project-structure.git",
+  "license": "MIT",
+  "private": false,
+  "workspaces": [
+    "components/*",
+    "integrations/*",
+    "shared-libs/*"
+  ]
+}

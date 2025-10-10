@@ -1,0 +1,8 @@
+{
+  "name": "@acme-corp/openweather",
+  "version": "1.0.0",
+  "description": "Shared logic for integrating with OpenWeather",
+  "dependencies": {
+    "@prismatic-io/spectral": "^10.11.0"
+  }
+}

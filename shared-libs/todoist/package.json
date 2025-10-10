@@ -1,0 +1,8 @@
+{
+  "name": "@acme-corp/todoist",
+  "version": "1.0.0",
+  "description": "Shared logic for integrating with Todoist",
+  "dependencies": {
+    "@prismatic-io/spectral": "^10.11.0"
+  }
+}

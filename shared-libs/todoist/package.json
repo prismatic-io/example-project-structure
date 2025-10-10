@@ -1,5 +1,5 @@
 {
-  "name": "@acme-corp/todoist",
+  "name": "@acme-corp/todoist-lib",
   "version": "1.0.0",
   "description": "Shared logic for integrating with Todoist",
   "dependencies": {

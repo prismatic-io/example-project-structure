@@ -18,6 +18,7 @@
     ]
   },
   "dependencies": {
+    "@acme-corp/todoist-lib": "^1.0.0",
     "@prismatic-io/spectral": "10.11.0"
   },
   "devDependencies": {

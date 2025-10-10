@@ -1,71 +1,56 @@
-/**
- * When a customer deploys an instance of your integration,
- * they will walk through a configuration wizard. In this
- * example configuration wizard, we prompt the customer for
- * their authentication information, and then use that
- * information to fetch data for a dropdown menu.
- *
- * For more information on the code-native config wizards, see
- * https://prismatic.io/docs/integrations/code-native/config-wizard/
- */
-
+import { TodoistClient, TodoistOAuthConnection } from "@acme-corp/todoist-lib";
 import {
-  type Connection,
-  type Element,
   configPage,
+  Connection,
   connectionConfigVar,
   dataSourceConfigVar,
+  Element,
 } from "@prismatic-io/spectral";
-import { createAcmeClient } from "./client";
-
-export interface Item {
-  id: number;
-  name: string;
-  quantity: number;
-}
 
 export const configPages = {
   Connections: configPage({
     elements: {
       // Your end user will enter connection information on the first page
-      "Acme Connection": connectionConfigVar({
-        stableKey: "271eb7b1-0cdd-48fc-8d92-5e97f108370b",
+      "Todoist Connection": connectionConfigVar({
+        stableKey: "todoist-connection",
         dataType: "connection",
+        oauth2Type: TodoistOAuthConnection.oauth2Type,
         inputs: {
-          baseUrl: {
-            label: "Acme Base URL",
-            type: "string",
-            required: true,
-            default: "https://my-json-server.typicode.com/prismatic-io/placeholder-data",
-            example: "https://my-company.api.acme.com/",
+          authorizeUrl: TodoistOAuthConnection.inputs.authorizeUrl,
+          tokenUrl: TodoistOAuthConnection.inputs.tokenUrl,
+          scopes: {
+            ...TodoistOAuthConnection.inputs.scopes,
+            shown: false,
           },
-          apiKey: {
-            label: "Acme API Key",
-            placeholder: "Acme API Key",
-            type: "password",
-            required: true,
-            comments: "You can enter any value here for this mock API.",
+          clientId: {
+            ...TodoistOAuthConnection.inputs.clientId,
+            shown: false,
+            default: process.env.TODOIST_CLIENT_ID,
+          },
+          clientSecret: {
+            ...TodoistOAuthConnection.inputs.clientSecret,
+            shown: false,
+            default: process.env.TODOIST_CLIENT_SECRET,
           },
         },
       }),
     },
   }),
-  "Item Configuration": configPage({
+  "Todoist Configuration": configPage({
     elements: {
-      /**
-       * Dynamically fetch data using the existing connection, and present the
-       * data as a dropdown menu in the config wizard.
-       */
-      "Select Item": dataSourceConfigVar({
-        stableKey: "7a899701-693b-492c-ace6-fb36318863b6",
+      _0: "<h2>Todoist Configuration</h2>",
+      _1: "When importing tasks into Todoist, you can automatically apply a label to each task. Which label would you like to apply?",
+      TaskLabel: dataSourceConfigVar({
+        stableKey: "task-label",
         dataSourceType: "picklist",
         perform: async (context) => {
-          // Create an authenticated reusable HTTP client from client.ts
-          const client = createAcmeClient(context.configVars["Acme Connection"] as Connection);
-          const { data: items } = await client.get<Item[]>("/items");
-          const options: Element[] = items.map((item) => ({
-            key: `${item.id}`,
-            label: item.name,
+          const todoistClient = new TodoistClient({
+            connection: context.configVars["Todoist Connection"] as Connection,
+          });
+          const labels = await todoistClient.labels.list();
+          const options: Element[] = labels.results.map((label) => ({
+            key: label.id,
+            label: label.name,
           }));
           return { result: options };
         },

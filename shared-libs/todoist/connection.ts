@@ -1,6 +1,6 @@
-import { oauth2Connection, OAuth2Type } from "@prismatic-io/spectral";
+import { OAuth2Type, oauth2Connection } from "@prismatic-io/spectral";
 
-export const todoistOauth = oauth2Connection({
+export const TodoistOAuthConnection = oauth2Connection({
   key: "todoistOauth",
   oauth2Type: OAuth2Type.AuthorizationCode,
   display: {
@@ -41,7 +41,6 @@ export const todoistOauth = oauth2Connection({
       type: "password",
       required: true,
       comments: "Client ID for todoist",
-      default: "03022f4dcc274d79a4c466a5b5d7ccfa",
     },
     clientSecret: {
       label: "Client Secret",
@@ -49,9 +48,6 @@ export const todoistOauth = oauth2Connection({
       type: "password",
       required: true,
       comments: "OAuth client secret for todoist",
-      default: "d15a5afbdbd744f6900b81489daccb34",
     },
   },
 });
-
-export default [todoistOauth];

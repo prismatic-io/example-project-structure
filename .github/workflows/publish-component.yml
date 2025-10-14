@@ -62,7 +62,7 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
-          name: ${{ needs.build-component.outputs.artifact-id }}
+          artifact-ids: ${{ needs.build-component.outputs.artifact-id }}
           path: ./components/${{ inputs.component }}/dist
         if: needs.build-component.outputs.built == 'true'
       - name: Publish ${{ inputs.component }} to ${{ matrix.environment }}

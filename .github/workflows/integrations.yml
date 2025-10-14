@@ -73,6 +73,9 @@ jobs:
           name: ${{ matrix.integration }}-build
           path: ./integrations/${{ matrix.integration }}/dist
         if: steps.integration-filter.outputs.integration == 'true'
+      - name: Set integration ID var name
+        id: var-name
+        run: echo "name=INTEGRATION_ID_$(echo ${{ matrix.integration }} | tr '[:lower:]' '[:upper:]')" >> $GITHUB_OUTPUT
       - name: Publish ${{ matrix.integration }} to ${{ matrix.environment }}
         uses: prismatic-io/integration-publisher@v1.4
         with:
@@ -80,6 +83,7 @@ jobs:
           PRISMATIC_URL: ${{ vars.PRISMATIC_URL }}
           PRISM_REFRESH_TOKEN: ${{ secrets.PRISM_REFRESH_TOKEN }}
           MAKE_AVAILABLE_IN_MARKETPLACE: false
+          INTEGRATION_ID: ${{ vars[steps.var-name.outputs.name] }}
         if: steps.integration-filter.outputs.integration == 'true'
       - name: Note if integration did not need publishing
         run: |

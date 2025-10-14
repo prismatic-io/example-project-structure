@@ -6,14 +6,27 @@ on:
       - main
 
 jobs:
+  # Get a list of components to deploy
+  list-components:
+    runs-on: ubuntu-latest
+    outputs:
+      components: ${{ steps.list-components.outputs.components }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: List components
+        id: list-components
+        run: |
+          components=$(ls -d components/*/ | xargs -n 1 basename | jq -R -s -c 'split("\n")[:-1]')
+          echo "components=$components" >> "$GITHUB_OUTPUT"
+
   build-components:
     runs-on: ubuntu-latest
+    needs: [list-components]
     strategy:
       matrix:
-        component: [acme, todoist]
+        component: ${{ fromJson(needs.list-components.outputs.components) }}
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
       - name: Check if component needs publishing
         id: component-filter
         uses: dorny/paths-filter@v3.0.2
@@ -22,57 +35,11 @@ jobs:
             component:
               - "components/${{ matrix.component }}/**"
               - "shared-libs/${{ matrix.component }}/**"
-      - name: Set up Node.js
-        uses: actions/setup-node@v6.0.0
+              - "**"
+          # TODO: Remove "**" above and uncomment the line below to only build when relevant files change
+      - uses: ./.github/workflows/deploy-component.yml
         with:
-          node-version: "24.10.0"
-        if: steps.component-filter.outputs.component == 'true'
-      - name: Install dependencies
-        run: npm install
-        if: steps.component-filter.outputs.component == 'true'
-      - name: Build ${{ matrix.component }} component
-        run: npm run build
-        working-directory: ./components/${{ matrix.component }}
-        if: steps.component-filter.outputs.component == 'true'
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.component }}-build
-          path: ./components/${{ matrix.component }}/dist
-        if: steps.component-filter.outputs.component == 'true'
-
-  publish-components:
-    runs-on: ubuntu-latest
-    needs: [build-components]
-    strategy:
-      matrix:
-        component: [acme, todoist]
-        environment: [australia, canada]
-    environment:
-      name: ${{ matrix.environment }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Check if component needs publishing
-        id: component-filter
-        uses: dorny/paths-filter@v3.0.2
-        with:
-          filters: |
-            component:
-              - "components/${{ matrix.component }}/**"
-              - "shared-libs/${{ matrix.component }}/**"
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ matrix.component }}-build
-          path: ./components/${{ matrix.component }}/dist
-        if: steps.component-filter.outputs.component == 'true'
-      - name: Publish ${{ matrix.component }} to ${{ matrix.environment }}
-        uses: prismatic-io/component-publisher@v1.4
-        with:
-          COMPONENT_PATH: ./components/${{ matrix.component }}
-          PRISMATIC_URL: ${{ vars.PRISMATIC_URL }}
-          PRISM_REFRESH_TOKEN: ${{ secrets.PRISM_REFRESH_TOKEN }}
+          component: ${{ matrix.component }}
         if: steps.component-filter.outputs.component == 'true'
       - name: Note if component did not need publishing
         run: |

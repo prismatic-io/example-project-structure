@@ -1,0 +1,56 @@
+name: Build and Publish Component
+description: Builds and publishes a specified component and uploads the build artifacts. This workflow is designed to be called by other workflows.
+
+on:
+  workflow_call:
+    inputs:
+      component:
+        required: true
+        type: string
+
+jobs:
+  build-component:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v6.0.0
+        with:
+          node-version: "24.10.0"
+      - name: Install dependencies
+        run: npm install
+      - name: Build ${{ inputs.component }} component
+        run: npm run build
+        working-directory: ./components/${{ inputs.component }}
+      - name: Upload build artifacts
+        id: upload-artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.component }}-build
+          path: ./components/${{ inputs.component }}/dist
+    outputs:
+      artifact-id: ${{ steps.upload-artifact.outputs.artifact-id }}
+
+  publish-component:
+    needs: [build-component]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environment: [australia, canada]
+    environment:
+      name: ${{ matrix.environment }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.build-component.outputs.artifact-id }}
+          path: ./components/${{ inputs.component }}/dist
+      - name: Publish ${{ inputs.component }} to ${{ matrix.environment }}
+        uses: prismatic-io/component-publisher@v1.4
+        with:
+          COMPONENT_PATH: ./components/${{ inputs.component }}
+          PRISMATIC_URL: ${{ vars.PRISMATIC_URL }}
+          PRISM_REFRESH_TOKEN: ${{ secrets.PRISM_REFRESH_TOKEN }}

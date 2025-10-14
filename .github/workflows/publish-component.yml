@@ -65,15 +65,6 @@ jobs:
           artifact-ids: ${{ needs.build-component.outputs.artifact-id }}
           path: ./components/${{ inputs.component }}/dist
         if: needs.build-component.outputs.built == 'true'
-      - name: Find index.js
-        run: |
-          set -ex
-          find . -name "index.js"
-          ls -l
-          ls -l ./components/${{ inputs.component }}
-          ls -l ./components/${{ inputs.component }}/dist
-        if: needs.build-component.outputs.built == 'true'
-        # TODO: Remove this step after verifying the correct path
       - name: Publish ${{ inputs.component }} to ${{ matrix.environment }}
         uses: prismatic-io/component-publisher@v1.4
         with:

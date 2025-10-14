@@ -40,7 +40,7 @@ jobs:
         id: upload-artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ inputs.component }}-build
+          name: ${{ inputs.component }}-component
           path: ./components/${{ inputs.component }}/dist
         if: steps.component-filter.outputs.component == 'true'
     outputs:

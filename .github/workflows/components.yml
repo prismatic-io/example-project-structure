@@ -1,4 +1,4 @@
-name: Deploy Prismatic components and code-native integrations
+name: Deploy Prismatic custom components
 
 on:
   push:
@@ -22,8 +22,6 @@ jobs:
             component:
               - "components/${{ matrix.component }}/**"
               - "shared-libs/${{ matrix.component }}/**"
-              - "**"
-          # TODO: Remove "**" above and uncomment the line below to only build when relevant files change
       - name: Set up Node.js
         uses: actions/setup-node@v6.0.0
         with:
@@ -63,7 +61,6 @@ jobs:
             component:
               - "components/${{ matrix.component }}/**"
               - "shared-libs/${{ matrix.component }}/**"
-              - "**"
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
@@ -78,5 +75,6 @@ jobs:
           PRISM_REFRESH_TOKEN: ${{ secrets.PRISM_REFRESH_TOKEN }}
         if: steps.component-filter.outputs.component == 'true'
       - name: Note if component did not need publishing
-        run: echo "No changes detected in the ${{ matrix.component }} component. Skipping publish step."
+        run: |
+          echo "No changes detected in the ${{ matrix.component }} component. Skipping publish step." >> "$GITHUB_STEP_SUMMARY"
         if: steps.component-filter.outputs.component == 'false'

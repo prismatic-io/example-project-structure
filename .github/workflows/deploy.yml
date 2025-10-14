@@ -75,7 +75,7 @@ jobs:
         with:
           COMPONENT_PATH: ./components/${{ matrix.component }}
           PRISMATIC_URL: ${{ vars.PRISMATIC_URL }}
-          PRISMATIC_REFRESH_TOKEN: ${{ secrets.PRISM_REFRESH_TOKEN }}
+          PRISM_REFRESH_TOKEN: ${{ secrets.PRISM_REFRESH_TOKEN }}
         if: steps.component-filter.outputs.component == 'true'
       - name: Note if component did not need publishing
         run: echo "No changes detected in the ${{ matrix.component }} component. Skipping publish step."

@@ -27,6 +27,8 @@ jobs:
       matrix:
         component: ${{ fromJson(needs.list-components.outputs.components) }}
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
       - name: Check if component needs publishing
         id: component-filter
         uses: dorny/paths-filter@v3.0.2

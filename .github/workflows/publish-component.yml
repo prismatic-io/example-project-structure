@@ -63,13 +63,15 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           artifact-ids: ${{ needs.build-component.outputs.artifact-id }}
+          path: ./components/${{ inputs.component }}/dist
         if: needs.build-component.outputs.built == 'true'
       - name: Find index.js
         run: |
-          set -e
+          set -ex
           find . -name "index.js"
           ls -l
           ls -l ./components/${{ inputs.component }}
+          ls -l ./components/${{ inputs.component }}/dist
         if: needs.build-component.outputs.built == 'true'
         # TODO: Remove this step after verifying the correct path
       - name: Publish ${{ inputs.component }} to ${{ matrix.environment }}

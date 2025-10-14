@@ -51,6 +51,8 @@ jobs:
       matrix:
         integration: [todoist]
         environment: [australia, canada]
+    environment:
+      name: ${{ matrix.environment }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

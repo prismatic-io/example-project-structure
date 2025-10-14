@@ -21,7 +21,7 @@ export default component({
   public: false,
   display: {
     label: "Acme",
-    description: "Interact with the Acme API",
+    description: "Interact with the Acme API.",
     iconPath: "icon.png",
   },
   actions,

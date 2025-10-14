@@ -20,30 +20,12 @@ jobs:
           components=$(ls -d components/*/ | xargs -n 1 basename | jq -R -s -c 'split("\n")[:-1]')
           echo "components=$components" >> "$GITHUB_OUTPUT"
 
-  build-components:
-    runs-on: ubuntu-latest
+  publish-components:
+    name: Publish ${{ matrix.component }} Component
     needs: [list-components]
     strategy:
       matrix:
         component: ${{ fromJson(needs.list-components.outputs.components) }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Check if component needs publishing
-        id: component-filter
-        uses: dorny/paths-filter@v3.0.2
-        with:
-          filters: |
-            component:
-              - "components/${{ matrix.component }}/**"
-              - "shared-libs/${{ matrix.component }}/**"
-              - "**"
-          # TODO: Remove "**" above and uncomment the line below to only build when relevant files change
-      - uses: ./.github/workflows/deploy-component.yml
-        with:
-          component: ${{ matrix.component }}
-        if: steps.component-filter.outputs.component == 'true'
-      - name: Note if component did not need publishing
-        run: |
-          echo "No changes detected in the ${{ matrix.component }} component. Skipping publish step." >> "$GITHUB_STEP_SUMMARY"
-        if: steps.component-filter.outputs.component == 'false'
+    uses: ./.github/workflows/publish-component.yml
+    with:
+      component: ${{ matrix.component }}

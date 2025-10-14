@@ -14,23 +14,38 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Check if component needs publishing
+        id: component-filter
+        uses: dorny/paths-filter@v3.0.2
+        with:
+          filters: |
+            component:
+              - "components/${{ inputs.component }}/**"
+              - "shared-libs/${{ inputs.component }}/**"
+              - "**"
+          # TODO: Remove "**" above and uncomment the line below to only build when relevant files change
       - name: Set up Node.js
         uses: actions/setup-node@v6.0.0
         with:
           node-version: "24.10.0"
+        if: steps.component-filter.outputs.component == 'true'
       - name: Install dependencies
         run: npm install
+        if: steps.component-filter.outputs.component == 'true'
       - name: Build ${{ inputs.component }} component
         run: npm run build
         working-directory: ./components/${{ inputs.component }}
+        if: steps.component-filter.outputs.component == 'true'
       - name: Upload build artifacts
         id: upload-artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.component }}-build
           path: ./components/${{ inputs.component }}/dist
+        if: steps.component-filter.outputs.component == 'true'
     outputs:
       artifact-id: ${{ steps.upload-artifact.outputs.artifact-id }}
+      built: ${{ steps.component-filter.outputs.component == 'true' }}
 
   publish-component:
     needs: [build-component]
@@ -43,14 +58,21 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        if: needs.build-component.outputs.built == 'true'
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
           name: ${{ needs.build-component.outputs.artifact-id }}
           path: ./components/${{ inputs.component }}/dist
+        if: needs.build-component.outputs.built == 'true'
       - name: Publish ${{ inputs.component }} to ${{ matrix.environment }}
         uses: prismatic-io/component-publisher@v1.4
         with:
           COMPONENT_PATH: ./components/${{ inputs.component }}
           PRISMATIC_URL: ${{ vars.PRISMATIC_URL }}
           PRISM_REFRESH_TOKEN: ${{ secrets.PRISM_REFRESH_TOKEN }}
+        if: needs.build-component.outputs.built == 'true'
+      - name: Note if component did not need publishing
+        run: |
+          echo "No changes detected in the ${{ inputs.component }} component. Skipping publish step." >> "$GITHUB_STEP_SUMMARY"
+        if: needs.build-component.outputs.built == 'false'

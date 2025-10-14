@@ -59,15 +59,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         if: needs.build-component.outputs.built == 'true'
-      - name: Find index.js
-        run: find . -name "index.js"
-        if: needs.build-component.outputs.built == 'true'
-        # TODO: Remove this step after verifying the correct path
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
           artifact-ids: ${{ needs.build-component.outputs.artifact-id }}
         if: needs.build-component.outputs.built == 'true'
+      - name: Find index.js
+        run: |
+          set -e
+          find . -name "index.js"
+          ls -l
+          ls -l ./components/${{ inputs.component }}
+        if: needs.build-component.outputs.built == 'true'
+        # TODO: Remove this step after verifying the correct path
       - name: Publish ${{ inputs.component }} to ${{ matrix.environment }}
         uses: prismatic-io/component-publisher@v1.4
         with:

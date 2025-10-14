@@ -1,0 +1,36 @@
+name: Deploy Prismatic components and code-native integrations
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish-components:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        component: [acme, todoist]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Check if component needs publishing
+        id: component-filter
+        uses: dorny/paths-filter@v3.0.2
+        with:
+          filters: |
+            component:
+              - "components/${{ matrix.component }}/**"
+              - "shared-libs/${{ matrix.component }}/**"
+      - name: Set up Node.js
+        uses: actions/setup-node@v6.0.0
+        with:
+          node-version: "24.10.0"
+        if: steps.component-filter.outputs.component == 'true'
+      - name: Install dependencies
+        run: npm install
+        if: steps.component-filter.outputs.component == 'true'
+      - name: Build ${{ matrix.component }} component
+        run: npm run build
+        working-directory: ./components/${{ matrix.component }}
+        if: steps.component-filter.outputs.component == 'true'

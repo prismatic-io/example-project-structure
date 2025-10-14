@@ -7,7 +7,7 @@ export default component({
   public: false,
   display: {
     label: "Todoist",
-    description: "Interact with Tasks, Projects, and more in Todoist",
+    description: "Interact with Tasks, Projects, and more in Todoist.",
     iconPath: "todoist.png",
   },
   actions,

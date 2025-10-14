@@ -20,8 +20,8 @@ export default component({
   key: "acme",
   public: false,
   display: {
-    label: "acme",
-    description: "Prism-generated Component",
+    label: "Acme",
+    description: "Interact with the Acme API",
     iconPath: "icon.png",
   },
   actions,

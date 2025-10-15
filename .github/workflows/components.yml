@@ -50,6 +50,8 @@ jobs:
         run: npm run test
         working-directory: ./components/${{ matrix.component }}
         if: steps.component-filter.outputs.component == 'true'
+        env:
+          ACME_TEST_API_KEY: ${{ secrets.ACME_TEST_API_KEY }}
       - name: Build ${{ matrix.component }} component
         run: npm run build
         working-directory: ./components/${{ matrix.component }}

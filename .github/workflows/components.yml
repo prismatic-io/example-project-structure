@@ -20,13 +20,81 @@ jobs:
           components=$(ls -d components/*/ | xargs -n 1 basename | jq -R -s -c 'split("\n")[:-1]')
           echo "components=$components" >> "$GITHUB_OUTPUT"
 
-  publish-components:
-    name: Publish ${{ matrix.component }} Component
+  build-component:
+    runs-on: ubuntu-latest
     needs: [list-components]
     strategy:
       matrix:
         component: ${{ fromJson(needs.list-components.outputs.components) }}
-    uses: ./.github/workflows/publish-component.yml
-    with:
-      component: ${{ matrix.component }}
-    secrets: inherit
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Check if component needs building
+        id: component-filter
+        uses: dorny/paths-filter@v3.0.2
+        with:
+          filters: |
+            component:
+              - "components/${{ matrix.component }}/**"
+              - "shared-libs/${{ matrix.component }}/**"
+              - "**"
+          # TODO: Remove the last line above to avoid rebuilding all components on any change
+      - name: Set up Node.js
+        uses: actions/setup-node@v6.0.0
+        with:
+          node-version: "24.10.0"
+        if: steps.component-filter.outputs.component == 'true'
+      - name: Install dependencies
+        run: npm install
+        if: steps.component-filter.outputs.component == 'true'
+      - name: Build ${{ matrix.component }} component
+        run: npm run build
+        working-directory: ./components/${{ matrix.component }}
+        if: steps.component-filter.outputs.component == 'true'
+      - name: Upload build artifacts
+        id: upload-artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.component }}-$GITHUB_RUN_ID
+          path: ./components/${{ matrix.component }}/dist
+        if: steps.component-filter.outputs.component == 'true'
+
+  publish-component:
+    needs: [list-components, build-component]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        component: ${{ fromJson(needs.list-components.outputs.components) }}
+        environment: [australia, canada]
+    environment:
+      name: ${{ matrix.environment }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Check if component needs publishing
+        id: component-filter
+        uses: dorny/paths-filter@v3.0.2
+        with:
+          filters: |
+            component:
+              - "components/${{ matrix.component }}/**"
+              - "shared-libs/${{ matrix.component }}/**"
+              - "**"
+          # TODO: Remove the last line above to avoid rebuilding all components on any change
+      - name: Download build artifacts
+        uses: actions/download-artifact@v5
+        with:
+          name: ${{ matrix.component }}-$GITHUB_RUN_ID
+          path: ./components/${{ matrix.component }}/dist
+        if: steps.component-filter.outputs.component == 'true'
+      - name: Publish ${{ matrix.component }} to ${{ matrix.environment }}
+        uses: prismatic-io/component-publisher@v1.4
+        with:
+          COMPONENT_PATH: ./components/${{ matrix.component }}
+          PRISMATIC_URL: ${{ vars.PRISMATIC_URL }}
+          PRISM_REFRESH_TOKEN: ${{ secrets.PRISM_REFRESH_TOKEN }}
+        if: steps.component-filter.outputs.component == 'true'
+      - name: Note if component did not need publishing
+        run: |
+          echo "No changes detected in the ${{ matrix.component }} component. Skipping publish step." >> "$GITHUB_STEP_SUMMARY"
+        if: steps.component-filter.outputs.component == 'false'

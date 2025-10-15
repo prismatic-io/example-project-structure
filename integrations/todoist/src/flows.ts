@@ -24,7 +24,7 @@ export const importTasks = flow({
     for (const task of tasks.results) {
       context.logger.info(`Importing task: ${task.content} (ID: ${task.id})`);
       await acmeClient.todo.create({
-        title: task.content,
+        task: task.content,
         completed: task.checked,
       });
     }

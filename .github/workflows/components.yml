@@ -36,10 +36,8 @@ jobs:
         with:
           filters: |
             component:
-              - "components/${{ matrix.component }}/**"
-              - "shared-libs/${{ matrix.component }}/**"
-              - "**"
-          # TODO: Remove the last line above to avoid rebuilding all components on any change
+              - 'components/${{ matrix.component }}/**'
+              - 'shared-libs/${{ matrix.component }}/**'
       - name: Set up Node.js
         uses: actions/setup-node@v6.0.0
         with:
@@ -79,10 +77,8 @@ jobs:
         with:
           filters: |
             component:
-              - "components/${{ matrix.component }}/**"
-              - "shared-libs/${{ matrix.component }}/**"
-              - "**"
-          # TODO: Remove the last line above to avoid rebuilding all components on any change
+              - 'components/${{ matrix.component }}/**'
+              - 'shared-libs/${{ matrix.component }}/**'
       - name: Download build artifacts
         uses: actions/download-artifact@v5
         with:

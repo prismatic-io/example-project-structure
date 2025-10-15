@@ -7,7 +7,7 @@ export { configPages, componentRegistry };
 
 export default integration({
   name: "Todoist",
-  description: "Sync tasks between Acme and Todoist",
+  description: "Sync tasks between Acme and Todoist.",
   iconPath: "todoist.png",
   flows,
   configPages,

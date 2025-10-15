@@ -11,6 +11,7 @@ jobs:
     strategy:
       matrix:
         integration: [todoist]
+      fail-fast: false
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -20,11 +21,9 @@ jobs:
         with:
           filters: |
             integration:
-              - "integrations/${{ matrix.integration }}/**"
-              - "shared-libs/${{ matrix.integration }}/**"
-              - "shared-libs/acme/**"
-              - "**"
-          # TODO: Remove "**" above and uncomment the line below to only build when relevant files change
+              - 'integrations/${{ matrix.integration }}/**'
+              - 'shared-libs/${{ matrix.integration }}/**'
+              - 'shared-libs/acme/**'
       - name: Set up Node.js
         uses: actions/setup-node@v6.0.0
         with:
@@ -51,6 +50,7 @@ jobs:
       matrix:
         integration: [todoist]
         environment: [australia, canada]
+      fail-fast: false
     environment:
       name: ${{ matrix.environment }}
     steps:
@@ -62,11 +62,9 @@ jobs:
         with:
           filters: |
             integration:
-              - "integrations/${{ matrix.integration }}/**"
-              - "shared-libs/${{ matrix.integration }}/**"
-              - "shared-libs/acme/**"
-              - "**"
-          # TODO: Remove "**" above and uncomment the line below to only build when relevant files change
+              - 'integrations/${{ matrix.integration }}/**'
+              - 'shared-libs/${{ matrix.integration }}/**'
+              - 'shared-libs/acme/**'
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
@@ -74,8 +72,17 @@ jobs:
           path: ./integrations/${{ matrix.integration }}/dist
         if: steps.integration-filter.outputs.integration == 'true'
       - name: Set integration ID var name
-        id: var-name
-        run: echo "name=INTEGRATION_ID_$(echo ${{ matrix.integration }} | tr '[:lower:]' '[:upper:]')" >> $GITHUB_OUTPUT
+        id: integration_id
+        run: |
+          echo "integration_id=INTEGRATION_ID_$(echo ${{ matrix.integration }} | tr '[:lower:]' '[:upper:]')" >> $GITHUB_OUTPUT
+        if: steps.integration-filter.outputs.integration == 'true'
+      - name: Fail if integration ID var not set
+        run: |
+          if [ -z "${{ vars[steps.integration_id.outputs.integration_id] }}" ]; then
+            echo "Error: Integration ID for ${{ matrix.integration }} in ${{ matrix.environment }} is not set in repository variables."
+            exit 1
+          fi
+        if: steps.integration-filter.outputs.integration == 'true'
       - name: Publish ${{ matrix.integration }} to ${{ matrix.environment }}
         uses: prismatic-io/integration-publisher@v1.4
         with:
@@ -83,7 +90,7 @@ jobs:
           PRISMATIC_URL: ${{ vars.PRISMATIC_URL }}
           PRISM_REFRESH_TOKEN: ${{ secrets.PRISM_REFRESH_TOKEN }}
           MAKE_AVAILABLE_IN_MARKETPLACE: false
-          INTEGRATION_ID: ${{ vars[steps.var-name.outputs.name] }}
+          INTEGRATION_ID: ${{ vars[steps.integration_id.outputs.integration_id] }}
         if: steps.integration-filter.outputs.integration == 'true'
       - name: Note if integration did not need publishing
         run: |

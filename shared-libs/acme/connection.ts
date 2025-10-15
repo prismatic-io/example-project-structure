@@ -11,7 +11,8 @@ export const AcmeAPIKeyConnection = connection({
       label: "API Key",
       type: "password",
       required: true,
-      comments: "The API key provided by Acme",
+      comments:
+        "The API key provided by Acme. Find this in your Acme account settings.",
     }),
   },
 });

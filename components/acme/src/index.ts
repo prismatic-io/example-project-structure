@@ -1,31 +1,15 @@
-/**
- * This project defines a custom connector that you can use
- * in the low-code integration designer. To run unit tests
- * of this connector locally, run "npm run test".
- *
- * To publish this connector for use in the low-code designer,
- * run "npm run build" and then "prism components:publish".
- *
- * For information on custom connectors, see
- * https://prismatic.io/docs/custom-connectors/
- */
-
 import { component } from "@prismatic-io/spectral";
 import actions from "./actions";
-import triggers from "./triggers";
-import dataSources from "./dataSources";
-import connections from "./connections";
+import { AcmeAPIKeyConnection } from "@acme-corp/acme-lib";
 
 export default component({
   key: "acme",
   public: false,
   display: {
     label: "Acme",
-    description: "Interact with the Acme API.",
+    description: "Interact with the Acme todo API",
     iconPath: "icon.png",
   },
   actions,
-  triggers,
-  dataSources,
-  connections,
+  connections: [AcmeAPIKeyConnection],
 });

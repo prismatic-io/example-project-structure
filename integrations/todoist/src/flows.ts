@@ -1,20 +1,36 @@
+import { AcmeClient } from "@acme-corp/acme-lib";
 import { TodoistClient } from "@acme-corp/todoist-lib";
 import { flow } from "@prismatic-io/spectral";
 
-export const listProjects = flow({
-  name: "List Projects",
+export const importTasks = flow({
+  name: "Import Tasks",
   stableKey: "4dfe8b05-08dc-497a-a0b4-2c97fee1d5d9",
-  description: "Fetch projects from Todoist",
+  description: "Import tasks with a certain label from Todoist into Acme",
   onExecution: async (context, params) => {
     const todoistClient = new TodoistClient({
       connection: context.configVars["Todoist Connection"],
       debug: context.debug.enabled,
     });
+    const acmeClient = new AcmeClient({
+      connection: context.configVars["Acme Connection"],
+      debug: context.debug.enabled,
+    });
 
-    const labels = await todoistClient.labels.list();
+    const tasks = await todoistClient.tasks.list({
+      label: context.configVars["Task Label"],
+    });
 
-    return { data: labels };
+    // Import tasks from Todoist into Acme
+    for (const task of tasks.results) {
+      context.logger.info(`Importing task: ${task.content} (ID: ${task.id})`);
+      await acmeClient.todo.create({
+        title: task.content,
+        completed: task.checked,
+      });
+    }
+
+    return { data: null };
   },
 });
 
-export default [listProjects];
+export default [importTasks];

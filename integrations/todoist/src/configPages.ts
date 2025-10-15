@@ -1,10 +1,11 @@
+import { AcmeAPIKeyConnection } from "@acme-corp/acme-lib";
 import { TodoistClient, TodoistOAuthConnection } from "@acme-corp/todoist-lib";
 import {
+  type Connection,
+  type Element,
   configPage,
-  Connection,
   connectionConfigVar,
   dataSourceConfigVar,
-  Element,
 } from "@prismatic-io/spectral";
 
 export const configPages = {
@@ -34,13 +35,18 @@ export const configPages = {
           },
         },
       }),
+      "Acme Connection": connectionConfigVar({
+        stableKey: "acme-connection",
+        dataType: "connection",
+        inputs: AcmeAPIKeyConnection.inputs,
+      }),
     },
   }),
   "Todoist Configuration": configPage({
     elements: {
       _0: "<h2>Todoist Configuration</h2>",
       _1: "When importing tasks into Todoist, you can automatically apply a label to each task. Which label would you like to apply?",
-      TaskLabel: dataSourceConfigVar({
+      "Task Label": dataSourceConfigVar({
         stableKey: "task-label",
         dataSourceType: "picklist",
         perform: async (context) => {

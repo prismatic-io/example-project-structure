@@ -35,7 +35,7 @@ export class TodoistClient {
 
   public readonly projects = {
     /** Get a list of all projects */
-    list: async () => {
+    list: async (): Promise<{ results: Project[] }> => {
       const response = await this.client.get<{ results: Project[] }>(
         "/projects"
       );
@@ -45,22 +45,22 @@ export class TodoistClient {
 
   public readonly tasks = {
     /** Get a list of tasks, optionally filtered by project, section, parent task, or label */
-    list: async (params: GetTasksParams = {}) => {
+    list: async (params: GetTasksParams = {}): Promise<{ results: Task[] }> => {
       const response = await this.client.get<{ results: Task[] }>("/tasks", {
         params,
       });
       return response.data;
     },
     /** Create a new task in a specified project */
-    create: async (params: CreateTaskParams) => {
-      const response = await this.client.post("/tasks", params);
+    create: async (params: CreateTaskParams): Promise<Task> => {
+      const response = await this.client.post<Task>("/tasks", params);
       return response.data;
     },
   };
 
   public readonly labels = {
     /** Get a list of labels */
-    list: async () => {
+    list: async (): Promise<{ results: Label[] }> => {
       const response = await this.client.get<{ results: Label[] }>("/labels");
       return response.data;
     },

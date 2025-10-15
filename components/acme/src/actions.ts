@@ -1,6 +1,6 @@
-import { action } from "@prismatic-io/spectral";
 import { AcmeClient } from "@acme-corp/acme-lib";
-import { completedInput, connectionInput, titleInput } from "./inputs";
+import { action } from "@prismatic-io/spectral";
+import { completedInput, connectionInput, taskInput } from "./inputs";
 
 const listTodos = action({
   display: {
@@ -27,7 +27,7 @@ const createTodo = action({
   },
   inputs: {
     connection: connectionInput,
-    title: titleInput,
+    task: taskInput,
     completed: completedInput,
   },
   perform: async (context, params) => {
@@ -36,7 +36,7 @@ const createTodo = action({
       debug: context.debug.enabled,
     });
     const todo = await client.todo.create({
-      title: params.title,
+      task: params.task,
       completed: params.completed,
     });
     return { data: todo };

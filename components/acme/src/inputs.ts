@@ -6,11 +6,11 @@ export const connectionInput = input({
   required: true,
 });
 
-export const titleInput = input({
-  label: "Title",
+export const taskInput = input({
+  label: "Task",
   type: "string",
   required: true,
-  comments: "The title of the todo item",
+  comments: "The task of the todo item",
   clean: util.types.toString,
 });
 

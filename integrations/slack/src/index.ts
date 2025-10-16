@@ -1,17 +1,18 @@
 import { integration } from "@prismatic-io/spectral";
 import documentation from "../documentation.md";
 import { componentRegistry } from "./componentRegistry";
-import { configPages } from "./configPages";
+import { configPages, scopedConfigVars } from "./configPages";
 import flows from "./flows";
 
-export { configPages, componentRegistry };
+export { componentRegistry, configPages, scopedConfigVars };
 
 export default integration({
-  name: "Todoist",
-  description: "Sync tasks between Acme and Todoist",
-  iconPath: "todoist.png",
+  name: "slack",
+  description: "Send todo items from Acme to Slack",
+  iconPath: "slack.png",
   documentation,
   flows,
   configPages,
   componentRegistry,
+  scopedConfigVars,
 });

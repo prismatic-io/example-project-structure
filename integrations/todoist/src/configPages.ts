@@ -6,6 +6,7 @@ import {
   configPage,
   connectionConfigVar,
   dataSourceConfigVar,
+  organizationActivatedConnection,
 } from "@prismatic-io/spectral";
 
 export const configPages = {
@@ -62,5 +63,14 @@ export const configPages = {
         },
       }),
     },
+  }),
+};
+
+// Organization-activated customer connection
+// https://prismatic.io/docs/integrations/connections/integration-agnostic-connections/org-activated-customer/
+// This will be set by the organization. Users will not see this config variable.
+export const scopedConfigVars = {
+  "Acme API Key": organizationActivatedConnection({
+    stableKey: "acme-api-key",
   }),
 };

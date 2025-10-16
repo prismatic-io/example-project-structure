@@ -6,11 +6,26 @@ on:
       - main
 
 jobs:
+  # Get a list of integrations to deploy
+  list-integrations:
+    runs-on: ubuntu-latest
+    outputs:
+      integrations: ${{ steps.list-integrations.outputs.integrations }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: List integrations
+        id: list-integrations
+        run: |
+          integrations=$(ls -d integrations/*/ | xargs -n 1 basename | jq -R -s -c 'split("\n")[:-1]')
+          echo "integrations=$integrations" >> "$GITHUB_OUTPUT"
+
   build-integrations:
     runs-on: ubuntu-latest
+    needs: [list-integrations]
     strategy:
       matrix:
-        integration: [todoist]
+        integration: ${{ fromJson(needs.list-integrations.outputs.integrations) }}
       fail-fast: false
     steps:
       - name: Checkout repository
@@ -35,6 +50,10 @@ jobs:
       - name: Build ${{ matrix.integration }} integration
         run: npm run build
         working-directory: ./integrations/${{ matrix.integration }}
+        env:
+          SLACK_CLIENT_ID: ${{ secrets.SLACK_CLIENT_ID }}
+          SLACK_CLIENT_SECRET: ${{ secrets.SLACK_CLIENT_SECRET }}
+          SLACK_SIGNING_SECRET: ${{ secrets.SLACK_SIGNING_SECRET }}
         if: steps.integration-filter.outputs.integration == 'true'
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4

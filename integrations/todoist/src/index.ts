@@ -1,10 +1,10 @@
 import { integration } from "@prismatic-io/spectral";
 import documentation from "../documentation.md";
 import { componentRegistry } from "./componentRegistry";
-import { configPages } from "./configPages";
+import { configPages, scopedConfigVars } from "./configPages";
 import flows from "./flows";
 
-export { configPages, componentRegistry };
+export { configPages, componentRegistry, scopedConfigVars };
 
 export default integration({
   name: "Todoist",
@@ -14,4 +14,5 @@ export default integration({
   flows,
   configPages,
   componentRegistry,
+  scopedConfigVars,
 });

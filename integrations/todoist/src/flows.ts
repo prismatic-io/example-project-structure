@@ -12,7 +12,7 @@ export const importTasks = flow({
       debug: context.debug.enabled,
     });
     const acmeClient = new AcmeClient({
-      connection: context.configVars["Acme Connection"],
+      connection: context.configVars["Acme API Key"],
       debug: context.debug.enabled,
     });
 

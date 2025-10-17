@@ -9,6 +9,12 @@ import {
   organizationActivatedConnection,
 } from "@prismatic-io/spectral";
 
+if (!process.env.TODOIST_CLIENT_ID || !process.env.TODOIST_CLIENT_SECRET) {
+  throw new Error(
+    "Missing TODOIST_CLIENT_ID or TODOIST_CLIENT_SECRET environment variables"
+  );
+}
+
 export const configPages = {
   Connections: configPage({
     elements: {
@@ -35,11 +41,6 @@ export const configPages = {
             default: process.env.TODOIST_CLIENT_SECRET,
           },
         },
-      }),
-      "Acme Connection": connectionConfigVar({
-        stableKey: "acme-connection",
-        dataType: "connection",
-        inputs: AcmeAPIKeyConnection.inputs,
       }),
     },
   }),

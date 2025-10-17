@@ -8,7 +8,7 @@ export default component({
   display: {
     label: "Acme",
     description: "Interact with the Acme todo API",
-    iconPath: "icon.png",
+    iconPath: "acme.png",
   },
   actions,
   connections: [AcmeAPIKeyConnection],

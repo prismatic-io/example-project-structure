@@ -1,4 +1,3 @@
-import { AcmeAPIKeyConnection } from "@acme-corp/acme-lib";
 import { TodoistClient, TodoistOAuthConnection } from "@acme-corp/todoist-lib";
 import {
   type Connection,

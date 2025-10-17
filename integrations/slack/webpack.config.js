@@ -9,7 +9,7 @@ module.exports = {
     new CopyPlugin({
       patterns: [{ from: "assets", to: path.resolve(__dirname, "dist") }],
     }),
-    new Dotenv(),
+    new Dotenv({ systemvars: true }),
   ],
   module: {
     rules: [

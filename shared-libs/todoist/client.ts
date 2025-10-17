@@ -1,12 +1,14 @@
 import type { Connection } from "@prismatic-io/spectral";
 import {
-  createClient,
   type HttpClient,
+  createClient,
 } from "@prismatic-io/spectral/dist/clients/http";
 import type {
   CreateTaskParams,
   GetTasksParams,
   Label,
+  ListLabelsParams,
+  ListLabelsReturn,
   Project,
   Task,
 } from "./types";
@@ -60,8 +62,13 @@ export class TodoistClient {
 
   public readonly labels = {
     /** Get a list of labels */
-    list: async (): Promise<{ results: Label[] }> => {
-      const response = await this.client.get<{ results: Label[] }>("/labels");
+    list: async (params: ListLabelsParams = {}): ListLabelsReturn => {
+      const response = await this.client.get<{
+        results: Label[];
+        next_cursor?: string;
+      }>("/labels", {
+        params: { cursor: params.cursor },
+      });
       return response.data;
     },
   };

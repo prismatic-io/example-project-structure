@@ -79,3 +79,12 @@ export interface Label {
   order: number;
   is_favorite: boolean;
 }
+
+export interface ListLabelsParams {
+  cursor?: string;
+}
+
+export type ListLabelsReturn = Promise<{
+  results: Label[];
+  next_cursor?: string;
+}>;

@@ -8,7 +8,7 @@ export { componentRegistry, configPages, scopedConfigVars };
 
 export default integration({
   name: "slack",
-  description: "Send todo items from Acme to Slack",
+  description: "Send incomplete todo items from Acme to Slack",
   iconPath: "slack.png",
   documentation,
   flows,

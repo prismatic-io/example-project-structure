@@ -63,6 +63,26 @@ export class TodoistClient {
   public readonly labels = {
     /** Get a list of labels */
     list: async (params: ListLabelsParams = {}): ListLabelsReturn => {
+      if (params.cursor && params.getAll) {
+        throw new Error("Cannot specify both cursor and getAll parameters");
+      }
+
+      if (params.getAll) {
+        const allLabels: Label[] = [];
+        let cursor = "";
+        do {
+          const response = await this.client.get<{
+            results: Label[];
+            next_cursor?: string;
+          }>("/labels", {
+            params: cursor ? { cursor } : {},
+          });
+          allLabels.push(...response.data.results);
+          cursor = response.data.next_cursor || "";
+        } while (cursor);
+        return { results: allLabels };
+      }
+
       const response = await this.client.get<{
         results: Label[];
         next_cursor?: string;

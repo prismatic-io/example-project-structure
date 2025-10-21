@@ -82,6 +82,7 @@ export interface Label {
 
 export interface ListLabelsParams {
   cursor?: string;
+  getAll?: boolean;
 }
 
 export type ListLabelsReturn = Promise<{

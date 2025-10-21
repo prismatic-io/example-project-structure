@@ -54,7 +54,7 @@ export const configPages = {
           const todoistClient = new TodoistClient({
             connection: context.configVars["Todoist Connection"] as Connection,
           });
-          const labels = await todoistClient.labels.list();
+          const labels = await todoistClient.labels.list({ getAll: true });
           const options: Element[] = labels.results.map((label) => ({
             key: label.id,
             label: label.name,

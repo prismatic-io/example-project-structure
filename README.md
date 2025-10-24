@@ -6,6 +6,8 @@
 This repository provides an example structure for organizing the custom components and code-native integrations that you build within the [Prismatic](https://prismatic.io/docs/) integration platform.
 While this example demonstrates a CI/CD pipeline using GitHub Actions, you can adapt the structure and workflows to fit your team's preferred tools and processes.
 
+[Watch a webinar on project structure and CI/CD](https://vimeo.com/1129318603?share=copy&fl=sv&fe=ci)
+
 ## Project Structure
 
 This project contains four main directories:

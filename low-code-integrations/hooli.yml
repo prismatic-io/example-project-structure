@@ -1,4 +1,4 @@
-category: ""
+category: Todo Items
 configPages:
   - elements:
       - type: configVar
@@ -47,6 +47,75 @@ flows:
             type: configVar
             value: Acme Connection
         name: List Todos
+      - action:
+          key: loopOverItems
+          component:
+            isPublic: true
+            key: loop
+            version: LATEST
+        description: ""
+        inputs:
+          items:
+            type: reference
+            value: listTodos.results
+        name: Loop Over Items
+        steps: []
+  - description: ""
+    endpointSecurityType: customer_optional
+    isAgentFlow: false
+    isSynchronous: false
+    name: Flow 2
+    steps:
+      - action:
+          key: webhook
+          component:
+            isPublic: true
+            key: webhook-triggers
+            version: LATEST
+        description: ""
+        inputs:
+          body:
+            type: value
+            value: ""
+          contentType:
+            type: value
+            value: ""
+          headers:
+            type: complex
+            value: []
+          statusCode:
+            type: value
+            value: ""
+        isTrigger: true
+        name: Flow 2 Trigger
+      - action:
+          key: runCode
+          component:
+            isPublic: true
+            key: code
+            version: LATEST
+        description: ""
+        inputs:
+          code:
+            type: value
+            value: |
+              /*
+                Access config variables by name through the configVars object. e.g.
+                  const apiEndpoint = `${configVars["App Base URL"]}/api`;
+
+                Access previous steps' results through the stepResults object. Trigger
+                and step names are camelCased. If the step "Get Data from API" returned
+                {"foo": "bar", "baz": 123}, you could destructure that data with:
+                  const { foo, baz } = stepResults.getDataFromApi.results;
+
+                You can return string, number or complex object data. e.g.
+                  return { data: { foo: "Hello", bar: 123.45, baz: true } };
+              */
+
+              module.exports = async ({ logger, configVars }, stepResults) => {
+                return { data: null };
+              };
+        name: Code Block
 name: Hooli
 requiredConfigVars:
   - dataType: schedule

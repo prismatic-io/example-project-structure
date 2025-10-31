@@ -21,6 +21,7 @@ This project contains four main directories:
 - `integrations/` contains [code-native integrations](https://prismatic.io/docs/integrations/code-native/) that can be deployed to customers.
   - `slack/` is an example code-native integration that pulls todo items from the "Acme" API and sends them to a Slack channel.
   - `todoist/` is an example code-native integration that pulls todo items from Todoist and imports them to "Acme".
+- `low-code-integrations/` contains integrations built using Prismatic's [low-code integration designer](https://prismatic.io/docs/integrations/low-code-integration-designer/).
 - `shared-libs/` contains shared code that can be used by both components and integrations.
   - `acme/` is a shared library used by the Acme component and both code-native integrations.
   - `todoist/` is a shared library used by the Todoist component and Todoist code-native integration.
@@ -65,7 +66,9 @@ This workflow performs the following steps:
 1. Builds the custom components.
 1. For each production environment (we use Australia and Canada), publishes the updated custom components to the Prismatic region using the [Component Publisher](https://github.com/prismatic-io/component-publisher/) GitHub action.
 
-### Integrations Workflow
+### Integrations Workflows
+
+#### Code-Native Integrations Workflow
 
 The [integrations.yml](./.github/workflows/integrations.yml) workflow is triggered when changes are pushed to the `main` branch that affect files in the `integrations/` or `shared-libs/` directories.
 
@@ -79,7 +82,13 @@ This workflow performs the following steps:
 1. Builds the code-native integrations.
 1. For each production environment (we use Australia and Canada), packages and imports the updated code-native integrations into the Prismatic region using the [Integration Publisher](https://github.com/prismatic-io/integration-publisher) GitHub action.
 
-> **Note on integration IDs**: Each code-native integration must have a unique integration ID within each Prismatic region. So, each integration must be published once manually to a production region before using the Integration Publisher GitHub action.
+#### Low-Code Integrations Workflow
+
+The [low-code-integrations.yml](./.github/workflows/low-code-integrations.yml) also uses the [Integration Publisher](https://github.com/prismatic-io/integration-publisher) GitHub action to publish low-code integrations, saved in YAML format, to the Prismatic platform.
+
+Note that low-code integrations must be saved "With latest component versions" in order to be published between tenants, as "v5" of your component in your development tenant may not be "v5" in your production tenants.
+
+> **Note on integration IDs**: Each code-native or low-code integration must have a unique integration ID within each Prismatic region. So, each integration must be published once manually to a production region before using the Integration Publisher GitHub action.
 >
 > These IDs are stored as environment variables in the GitHub repository settings and referenced in the workflow. For example, the Canada environment has a variable named `INTEGRATION_ID_SLACK` that contains the Slack integration's ID in the Canada region.
 

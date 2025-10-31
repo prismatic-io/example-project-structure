@@ -1,0 +1,63 @@
+category: ""
+configPages:
+  - elements:
+      - type: configVar
+        value: Sync Schedule
+    name: Configuration
+defaultInstanceProfile: Default Instance Profile
+definitionVersion: 7
+description: ""
+documentation: |-
+  # Hooli Integration
+
+  This integration syncs todo items from Acme to Hooli.
+endpointType: flow_specific
+flows:
+  - description: ""
+    endpointSecurityType: customer_optional
+    isAgentFlow: false
+    isSynchronous: false
+    name: Sync TODO items with Hooli
+    steps:
+      - action:
+          key: schedule
+          component:
+            isPublic: true
+            key: schedule-triggers
+            version: LATEST
+        description: ""
+        inputs: {}
+        isTrigger: true
+        name: Trigger
+        schedule:
+          meta:
+            scheduleType: custom
+            timeZone: ""
+          type: configVar
+          value: Sync Schedule
+      - action:
+          key: listTodos
+          component:
+            isPublic: false
+            key: acme
+            version: LATEST
+        description: ""
+        inputs:
+          connection:
+            type: configVar
+            value: Acme Connection
+        name: List Todos
+name: Hooli
+requiredConfigVars:
+  - dataType: schedule
+    defaultValue: 5 */1 * * *
+    description: How often do you want todo tasks to sync?
+    key: Sync Schedule
+    orgOnly: false
+    scheduleType: hour
+  - dataType: connection
+    key: Acme Connection
+    meta:
+      visibleToCustomerDeployer: false
+      visibleToOrgDeployer: false
+    useScopedConfigVar: acme-api-key

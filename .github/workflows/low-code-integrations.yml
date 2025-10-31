@@ -40,7 +40,7 @@ jobs:
       - name: Publish ${{ matrix.integration }} to ${{ matrix.environment }}
         uses: prismatic-io/integration-publisher@v1.4
         with:
-          PATH_TO_YML: ./integrations/${{ matrix.integration }}
+          PATH_TO_YML: ./low-code-integrations/${{ matrix.integration }}.yml
           PRISMATIC_URL: ${{ vars.PRISMATIC_URL }}
           PRISM_REFRESH_TOKEN: ${{ secrets.PRISM_REFRESH_TOKEN }}
           MAKE_AVAILABLE_IN_MARKETPLACE: false

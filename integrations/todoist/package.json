@@ -18,7 +18,7 @@
   "dependencies": {
     "@acme-corp/acme-lib": "file:../../shared-libs/acme",
     "@acme-corp/todoist-lib": "file:../../shared-libs/todoist",
-    "@prismatic-io/spectral": "10.11.0"
+    "@prismatic-io/spectral": "10.11.2"
   },
   "devDependencies": {
     "@prismatic-io/eslint-config-spectral": "2.1.0",

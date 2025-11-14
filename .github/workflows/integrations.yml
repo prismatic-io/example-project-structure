@@ -1,4 +1,4 @@
-name: Deploy Prismatic code-native integrations
+name: Deploy Code-Native Integrations
 
 on:
   push:

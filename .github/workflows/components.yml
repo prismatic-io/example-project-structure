@@ -1,4 +1,4 @@
-name: Deploy Prismatic custom components
+name: Deploy Custom Components
 
 on:
   push:

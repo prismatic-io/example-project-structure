@@ -1,4 +1,4 @@
-name: Deploy Prismatic low-code integrations
+name: Deploy Low-Code Integrations
 
 on:
   push:

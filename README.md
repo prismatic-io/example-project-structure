@@ -1,7 +1,8 @@
 # Example Prismatic Repository Structure
 
-[![Deploy Prismatic custom components](https://github.com/prismatic-io/example-project-structure/actions/workflows/components.yml/badge.svg)](https://github.com/prismatic-io/example-project-structure/actions/workflows/components.yml)
-[![Deploy Prismatic code-native integrations](https://github.com/prismatic-io/example-project-structure/actions/workflows/integrations.yml/badge.svg)](https://github.com/prismatic-io/example-project-structure/actions/workflows/integrations.yml)
+[![Deploy Custom Components](https://github.com/prismatic-io/example-project-structure/actions/workflows/components.yml/badge.svg)](https://github.com/prismatic-io/example-project-structure/actions/workflows/components.yml)
+[![Deploy Code-Native Integrations](https://github.com/prismatic-io/example-project-structure/actions/workflows/integrations.yml/badge.svg)](https://github.com/prismatic-io/example-project-structure/actions/workflows/integrations.yml)
+[![Deploy Low-Code Integrations](https://github.com/prismatic-io/example-project-structure/actions/workflows/low-code-integrations.yml/badge.svg)](https://github.com/prismatic-io/example-project-structure/actions/workflows/low-code-integrations.yml)
 
 This repository provides an example structure for organizing the custom components and code-native integrations that you build within the [Prismatic](https://prismatic.io/docs/) integration platform.
 While this example demonstrates a CI/CD pipeline using GitHub Actions, you can adapt the structure and workflows to fit your team's preferred tools and processes.

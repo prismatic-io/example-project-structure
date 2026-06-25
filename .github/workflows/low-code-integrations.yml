@@ -13,7 +13,7 @@ jobs:
       integrations: ${{ steps.list-integrations.outputs.integrations }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7.0.0
       - name: List integrations
         id: list-integrations
         run: |
@@ -32,13 +32,13 @@ jobs:
       name: ${{ matrix.environment }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7.0.0
       - name: Set integration ID var name
         id: integration_id
         run: |
           echo "integration_id=INTEGRATION_ID_$(echo ${{ matrix.integration }} | tr '[:lower:]' '[:upper:]')" >> $GITHUB_OUTPUT
       - name: Publish ${{ matrix.integration }} to ${{ matrix.environment }}
-        uses: prismatic-io/integration-publisher@v1.4
+        uses: prismatic-io/integration-publisher@v2.2.2
         with:
           PATH_TO_YML: ./low-code-integrations/${{ matrix.integration }}.yml
           PRISMATIC_URL: ${{ vars.PRISMATIC_URL }}

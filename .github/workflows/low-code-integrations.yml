@@ -13,7 +13,7 @@ jobs:
       integrations: ${{ steps.list-integrations.outputs.integrations }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7.0.0
+        uses: actions/checkout@v7.0.1
       - name: List integrations
         id: list-integrations
         run: |
@@ -32,7 +32,7 @@ jobs:
       name: ${{ matrix.environment }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7.0.0
+        uses: actions/checkout@v7.0.1
       - name: Set integration ID var name
         id: integration_id
         run: |

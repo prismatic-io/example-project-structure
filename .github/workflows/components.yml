@@ -13,7 +13,7 @@ jobs:
       components: ${{ steps.list-components.outputs.components }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7.0.0
+        uses: actions/checkout@v7.0.1
       - name: List components
         id: list-components
         run: |
@@ -29,7 +29,7 @@ jobs:
       fail-fast: false
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7.0.0
+        uses: actions/checkout@v7.0.1
       - name: Check if component needs building
         id: component-filter
         uses: dorny/paths-filter@v4.0.2
@@ -76,7 +76,7 @@ jobs:
       name: ${{ matrix.environment }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7.0.0
+        uses: actions/checkout@v7.0.1
       - name: Check if component needs publishing
         id: component-filter
         uses: dorny/paths-filter@v4.0.2

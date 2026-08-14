@@ -32,7 +32,7 @@ jobs:
         uses: actions/checkout@v7.0.1
       - name: Check if component needs building
         id: component-filter
-        uses: dorny/paths-filter@v4.0.2
+        uses: dorny/paths-filter@v4.0.3
         with:
           filters: |
             component:
@@ -79,7 +79,7 @@ jobs:
         uses: actions/checkout@v7.0.1
       - name: Check if component needs publishing
         id: component-filter
-        uses: dorny/paths-filter@v4.0.2
+        uses: dorny/paths-filter@v4.0.3
         with:
           filters: |
             component:

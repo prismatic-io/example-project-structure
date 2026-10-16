@@ -58,7 +58,7 @@ jobs:
         if: steps.component-filter.outputs.component == 'true'
       - name: Upload build artifacts
         id: upload-artifact
-        uses: actions/upload-artifact@v7.0.1
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: ${{ matrix.component }}-${{ github.run_id }}
           path: ./components/${{ matrix.component }}/dist

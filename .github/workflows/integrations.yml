@@ -58,7 +58,7 @@ jobs:
           TODOIST_CLIENT_SECRET: ${{ secrets.TODOIST_CLIENT_SECRET }}
         if: steps.integration-filter.outputs.integration == 'true'
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v7.0.1
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: ${{ matrix.integration }}-build
           path: ./integrations/${{ matrix.integration }}/dist

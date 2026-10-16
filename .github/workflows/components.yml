@@ -86,7 +86,7 @@ jobs:
               - 'components/${{ matrix.component }}/**'
               - 'shared-libs/${{ matrix.component }}/**'
       - name: Download build artifacts
-        uses: actions/download-artifact@v8.0.1
+        uses: actions/download-artifact@v8.0.2
         with:
           name: ${{ matrix.component }}-${{ github.run_id }}
           path: ./components/${{ matrix.component }}/dist

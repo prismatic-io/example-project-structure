@@ -87,7 +87,7 @@ jobs:
               - 'shared-libs/${{ matrix.integration }}/**'
               - 'shared-libs/acme/**'
       - name: Download build artifacts
-        uses: actions/download-artifact@v8.0.1
+        uses: actions/download-artifact@v8.0.2
         with:
           name: ${{ matrix.integration }}-build
           path: ./integrations/${{ matrix.integration }}/dist
